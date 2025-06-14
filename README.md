@@ -82,10 +82,14 @@ property-app/
 ```
 
 ## Features
-- Home screen with property list, search bar, and image carousel
+- Home screen with property list, search bar, and image.
+![Home](image.png)
 - Property details screen with image slider, map view, features with icons, and booking functionality
+![Proeprty Detail](image-1.png)
 - Bookings tab showing both API and locally added bookings, with cancel feature and confirmation
+![Booking](image-2.png)
 - Profile tab with user info and social links
+![Profile](image-3.png)
 - State management using Zustand
 - API integration using React Query and Axios
 - Navigation using expo-router (tabs + stack)
