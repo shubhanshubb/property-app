@@ -29,7 +29,7 @@ function HomeScreen() {
       <ActivityIndicator size="large" color="#007AFF" />
     </View>
   );
-  if (error) return <Text style={tw`text-center mt-8`}>Error loading properties</Text>;
+  if (error) return <Text style={tw`justify-center items-center text-center mt-8`}>Error loading properties</Text>;
 
   return (
     <View style={tw`flex-1 bg-white p-4 pt-14`}>

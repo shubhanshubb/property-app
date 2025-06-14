@@ -40,7 +40,7 @@ function ProfileScreen() {
       </View>
     );
   if (error || !profile)
-    return <Text style={tw`text-center mt-8`}>Error loading profile</Text>;
+    return <Text style={tw`justify-center items-center text-center mt-8`}>Error loading profile</Text>;
 
   return (
     <ScrollView style={tw`flex-1 bg-white p-4 pt-14`}>

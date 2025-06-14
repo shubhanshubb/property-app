@@ -30,7 +30,8 @@ function BookingsScreen() {
       <Text style={tw`text-lg`}>Loading...</Text>
     </View>
   );
-  if (error) return <Text style={tw`text-center mt-8`}>Error loading bookings</Text>;
+  if (error) return 
+  <Text style={tw`text-center mt-8 `}>Error loading bookings</Text>;
 
   if (allBookings.length === 0) {
     return (
