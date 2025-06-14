@@ -113,7 +113,7 @@ export default function PropertyDetails() {
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.01,
               }}
-              mapType={Platform.OS == "android" ? "none" : "standard"}
+              // mapType={Platform.OS == "android" ? "none" : "standard"}
               scrollEnabled={true}
               zoomEnabled={false}
             >

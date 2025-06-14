@@ -1,4 +1,4 @@
-import api from "@/utils/api";
+import { getProfile } from "@/utils/api";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import {
   QueryClient,
@@ -21,8 +21,9 @@ import tw from "twrnc";
 const queryClient = new QueryClient();
 
 const fetchProfile = async () => {
-  const res = await api.get("/profile");
-  return res.data;
+  return await getProfile();
+  // const res = await api.get('/profile');
+  // return res.data;
 };
 
 function ProfileScreen() {

@@ -3,13 +3,14 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Platform, Pressable, StatusBar, Text, TextInput, View } from 'react-native';
 import tw from 'twrnc';
-import api from '../../utils/api';
+import { getProperties } from '../../utils/api';
 
 const queryClient = new QueryClient();
 
 const fetchProperties = async () => {
-  const res = await api.get('/properties');
-  return res.data;
+  return await getProperties();
+  // const res = await api.get('/properties');
+  // return res.data;
 };
 
 function HomeScreen() {

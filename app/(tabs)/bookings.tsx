@@ -3,14 +3,16 @@ import React from 'react';
 import { Alert, FlatList, Platform, StatusBar, Text, View } from 'react-native';
 import tw from 'twrnc';
 import { useBookingStore } from '../../store/bookingStore';
-import api from '../../utils/api';
+import { getBookings } from '../../utils/api';
 
 const queryClient = new QueryClient();
 
 const fetchBookings = async () => {
-  const res = await api.get('/bookings');
-  return res.data;
+  return await getBookings();
+  // const res = await api.get('/bookings');
+  // return res.data;
 };
+
 
 function BookingsScreen() {
   const zustandBookings = useBookingStore((state) => state.bookings);
