@@ -1,75 +1,87 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { ActivityIndicator, FlatList, Image, Pressable, StatusBar, Text, TextInput, View } from 'react-native';
+import tw from 'twrnc';
+import api from '../../utils/api';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const queryClient = new QueryClient();
 
-export default function HomeScreen() {
+const fetchProperties = async () => {
+  const res = await api.get('/properties');
+  return res.data;
+};
+
+function HomeScreen() {
+  const [search, setSearch] = useState('');
+  const router = useRouter();
+  const { data: properties = [], isLoading, error } = useQuery({
+    queryKey: ['properties'],
+    queryFn: fetchProperties,
+  });
+
+  const filtered = properties.filter((p: any) =>
+    p.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (isLoading) return (
+    <View style={tw`flex-1 justify-center items-center`}>
+      <ActivityIndicator size="large" color="#007AFF" />
+    </View>
+  );
+  if (error) return <Text style={tw`text-center mt-8`}>Error loading properties</Text>;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={tw`flex-1 bg-white p-4 pt-14`}>
+      <StatusBar barStyle="dark-content" />
+      <TextInput
+        style={tw`border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-200 text-base`}
+        placeholder="Search properties..."
+        value={search}
+        onChangeText={setSearch}
+        placeholderTextColor="#111"
+      />
+      {filtered.length === 0 ? (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <Text style={tw`text-gray-500 text-lg`}>No results found</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filtered}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => {
+            const location = item.location
+              ? `${item.location.address}, ${item.location.city}, ${item.location.state}`
+              : '';
+            const imageUrl = item.images && item.images.length > 0 ? item.images[0] : undefined;
+            return (
+              <Pressable style={tw`mb-4 p-4 border rounded bg-gray-100 border-gray-200`} onPress={() => router.push({
+                pathname: '/property/details',
+                params: { property: encodeURIComponent(JSON.stringify(item)) },
+              })}>
+                {imageUrl && (
+                  <Image
+                    source={{ uri: imageUrl }}
+                    style={tw`w-full h-44 rounded-lg mb-2`}
+                    resizeMode="cover"
+                  />
+                )}
+                <Text style={tw`text-lg font-bold mb-1`}>{item.title}</Text>
+                <Text style={tw`text-gray-700`}>{location}</Text>
+                <Text style={tw`text-gray-500`}>${item.price}</Text>
+              </Pressable>
+            );
+          }}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+export default function Home() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HomeScreen />
+    </QueryClientProvider>
+  );
+}
