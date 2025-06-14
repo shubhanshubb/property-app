@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Alert, FlatList, Text, View } from 'react-native';
+import { Alert, FlatList, Platform, StatusBar, Text, View } from 'react-native';
 import tw from 'twrnc';
 import { useBookingStore } from '../../store/bookingStore';
 import api from '../../utils/api';
@@ -43,6 +43,7 @@ function BookingsScreen() {
 
   return (
     <View style={tw`flex-1 bg-white p-4 pt-14`}>
+      <StatusBar barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"} />
       <FlatList
         data={allBookings}
         keyExtractor={item => item.id.toString()}

@@ -3,12 +3,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
-    Dimensions,
-    Image,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import tw from "twrnc";
@@ -44,6 +46,7 @@ export default function PropertyDetails() {
 
   return (
     <View style={tw`flex-1 bg-white`}>
+      <StatusBar barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"} />
       <View style={tw`flex-row items-center px-4 pt-14 pb-4 bg-white`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-1`}>
           <Ionicons name="chevron-back" size={24} color="black" />
@@ -110,6 +113,7 @@ export default function PropertyDetails() {
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.01,
               }}
+              mapType={Platform.OS == "android" ? "none" : "standard"}
               scrollEnabled={true}
               zoomEnabled={false}
             >

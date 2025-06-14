@@ -1,18 +1,20 @@
 import api from "@/utils/api";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import {
-    QueryClient,
-    QueryClientProvider,
-    useQuery,
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
 } from "@tanstack/react-query";
 import React from "react";
 import {
-    Image,
-    Linking,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  Linking,
+  Platform,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import tw from "twrnc";
 
@@ -40,10 +42,15 @@ function ProfileScreen() {
       </View>
     );
   if (error || !profile)
-    return <Text style={tw`justify-center items-center text-center mt-8`}>Error loading profile</Text>;
+    return (
+      <Text style={tw`justify-center items-center text-center mt-8`}>
+        Error loading profile
+      </Text>
+    );
 
   return (
     <ScrollView style={tw`flex-1 bg-white p-4 pt-14`}>
+      <StatusBar barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"} />
       <View style={tw`items-center mb-6`}>
         <Image
           source={{ uri: profile.avatar }}
